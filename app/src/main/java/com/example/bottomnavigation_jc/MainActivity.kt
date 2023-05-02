@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,12 +53,14 @@ class MainActivity : ComponentActivity() {
                                 BottomNavItem(
                                     name = "Chat",
                                     route = "chat",
-                                    icon = Icons.Default.Notifications
+                                    icon = Icons.Default.Notifications,
+                                    badgeCount = 1000
                                 ),
                                 BottomNavItem(
                                     name = "Settings",
                                     route = "settings",
-                                    icon = Icons.Default.Settings
+                                    icon = Icons.Default.Settings,
+                                    badgeCount = 500
                                 )
                             ),
                             navController = navController,
@@ -131,7 +136,9 @@ fun BottomNavigationBar(
                         if(item.badgeCount>0){
                             BadgedBox(
                                 badge = {
-                                    Text(text = item.badgeCount.toString())
+                                    Badge(backgroundColor = Color.Red){
+                                        Text(text = item.badgeCount.toString() , color = Color.White)
+                                    }
                                 }
                             ) {
                                 Icon(imageVector = item.icon, contentDescription = null)
@@ -151,5 +158,43 @@ fun BottomNavigationBar(
                 }
                 )
         }
+    }
+}
+
+@Preview
+@Composable
+fun Preview1() {
+    val navController = rememberNavController()
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                items = listOf(
+                    BottomNavItem(
+                        name = "Home",
+                        route = "home",
+                        icon = Icons.Default.Home
+                    ),
+                    BottomNavItem(
+                        name = "Chat",
+                        route = "chat",
+                        icon = Icons.Default.Notifications,
+                        badgeCount = 1000
+                    ),
+                    BottomNavItem(
+                        name = "Settings",
+                        route = "settings",
+                        icon = Icons.Default.Settings,
+                        badgeCount = 500
+                    )
+                ),
+                navController = navController,
+                onItemClick = {
+                    navController.navigate(it.route)
+                },
+                modifier = Modifier
+            )
+        }
+    ){
+        Navigation(navController = navController)
     }
 }
